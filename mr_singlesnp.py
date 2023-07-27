@@ -23,20 +23,6 @@ def default_parameters():
     }
 
 def mr_singlesnp(dat, parameters=None, single_method="mr_wald_ratio", all_method=("mr_ivw", "mr_egger_regression")):
-'''
-  Description: This function performs Mendelian Randomization (MR) analysis for each exposure-outcome pair.
-  
-  Parameters:
-  - b_exp (array-like): Beta values of the exposure variable.
-  - b_out (array-like): Beta values of the outcome variable.
-  - se_exp (array-like): Standard errors of the exposure variable.
-  - se_out (array-like): Standard errors of the outcome variable.
-  - parameters (dict): Dictionary containing additional parameters for MR analysis.
-  
-  Returns:
-  result (DataFrame): A pandas DataFrame containing the MR estimates, standard errors, and p-values for each SNP within each
-  exposure-outcome pair.
-'''
     if parameters is None:
         parameters = default_parameters()
 
@@ -69,7 +55,7 @@ def mr_singlesnp(dat, parameters=None, single_method="mr_wald_ratio", all_method
             }, index=[0])
             res = res.append(d, ignore_index=True)
             continue
-        print (res)
+        # print (res)
         l = []
 
         for i in range(nsnp):
@@ -94,15 +80,15 @@ def mr_singlesnp(dat, parameters=None, single_method="mr_wald_ratio", all_method
             "outcome": x["outcome"].iloc[0],
             "exposure": x["exposure"].iloc[0]
         })
-        res = res.append(d, ignore_index=True)
-
+        res = res._append(d, ignore_index=True)
+   # nom.append("All - " + method["name"])
     res = res[["exposure", "outcome", "id.exposure", "id.outcome", "samplesize", "SNP", "b", "se", "p"]]
     return res
 
-exp = extract_instruments("ieu-a-2")
-out = extract_outcome_data(snps=exp["SNP"], outcomes=["ieu-a-7"])
+# exp = extract_instruments("ieu-a-2")
+# out = extract_outcome_data(snps=exp["SNP"], outcomes=["ieu-a-7"])
 
-dat = harmonise_data(exp, out)
+# dat = harmonise_data(exp, out)
 
-res = mr_singlesnp(dat)
-print(res)
+# res = mr_singlesnp(dat)
+# print(res)
